@@ -14,7 +14,7 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(error = FALSE)
 ```
 
-* R Code for exercise: 
+* RMarkdown File with Code for exercise: [https://raw.githubusercontent.com/melindahiggins2000/N741_gt_andmore_grammarTables/main/rmarkdown_tables_dataSummary.Rmd](https://raw.githubusercontent.com/melindahiggins2000/N741_gt_andmore_grammarTables/main/rmarkdown_tables_dataSummary.Rmd)
 
 * R packages used:
     - `palmerpenguins`
