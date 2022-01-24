@@ -5,12 +5,12 @@
 
 -   R packages used:
 
-    -   `palmerpenguins`
-    -   `rmarkdown`
-    -   `knitr`
-    -   `dplyr`
-    -   `gt`
-    -   `gtsummary`
-    -   `arsenal`
-    -   `summarytools`
-    -   `magrittr`
+    -   [`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/)
+    -   [`rmarkdown`](https://rmarkdown.rstudio.com/)
+    -   [`knitr`](https://yihui.org/knitr/)
+    -   [`dplyr`](https://dplyr.tidyverse.org/)
+    -   [`gt`](https://gt.rstudio.com/)
+    -   [`gtsummary`](https://www.danieldsjoberg.com/gtsummary/)
+    -   [`arsenal`](https://mayoverse.github.io/arsenal/)
+    -   [`summarytools`](https://cran.r-project.org/web/packages/summarytools/)
+    -   [`magrittr`](https://magrittr.tidyverse.org/)
