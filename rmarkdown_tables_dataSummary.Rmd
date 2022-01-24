@@ -1,0 +1,222 @@
+---
+title: "RMarkdown Tables - Data Summary and Presentation"
+author: "Melinda Higgins"
+date: "1/24/2022"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+```
+
+## Why you want Tables
+
+While you can create simple tables with the `table()` function in base R, most of the time you will want to present your results in some kind of table format. This could be for any of the following:
+
+* viewing your data in a table format
+* presenting summary statistics of the variables in your dataset
+* presenting your models or analysis results in a table format
+* and even more...
+
+## Get Inspiration
+
+The underlying formatting for making appealing and well organized tables can be sort of an art-form. Getting the code to work along with the formatting for various final formats (like HTML, PDF, DOC, PPT, etc) can be extremely challenging. However, the good new is that this has recently been a hot area of rapid development in the R/RMarkdown world.
+
+In fact, there in 2020 and 2021 there have been contests on the best tables and associated packages and codes for these projects. See:
+
+* [Winners of the 2021 RStudio Tables contest](https://www.rstudio.com/blog/winners-of-the-2021-table-contest/)
+* [Winners of the 2020 RStudio Tables contest](https://www.rstudio.com/blog/winners-of-the-2020-rstudio-table-contest/) 
+
+## Let's try a simple table to get started
+
+Here is an example of basic output to view the "top" of the builtin `mtcars` dataset, using this code: `head(mtcars)` .
+
+```{r}
+head(mtcars)
+```
+
+OK, so this is just text on the page - not really a nice table. 
+
+To make this a table, let's use the `kable()` function from the `knitr` package. To set this up, we'll also use the `dplyr` package to use the `%>%` pipe coding approach.
+
+```{r}
+library(knitr)
+library(dplyr)
+mtcars %>%
+  head() %>%
+  knitr::kable()
+```
+
+Let's add a caption for our table. 
+
+NOTE: The way the caption shows up will vary depending on whether you "knit" to HTML, DOCX, PDF or other formats...
+
+```{r}
+mtcars %>%
+  head() %>%
+  knitr::kable(caption = "Top 6 rows of the mtcars dataset")
+```
+
+## Try customization with the `gt` package
+
+You can add headers, footers and more with the `gt` package. See [https://gt.rstudio.com/index.html](https://gt.rstudio.com/index.html).
+
+```{r}
+library(gt)
+mtcars %>%
+  head() %>%
+  gt()
+```
+
+Add a header.
+
+```{r}
+mtcars %>%
+  head() %>%
+  gt() %>%
+  tab_header(
+    title = "The mtcars dataset",
+    subtitle = "The top 6 rows are presented"
+  )
+```
+
+Add a footer.
+
+```{r}
+mtcars %>%
+  head() %>%
+  gt() %>%
+  tab_header(
+    title = "The mtcars dataset",
+    subtitle = "The top 6 rows are presented"
+  ) %>%
+  tab_source_note(
+    source_note = "The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models)."
+  )
+```
+
+## What about summary statistics?
+
+A really simple approach is to use the `summary()` function in case R. But the results, while useful, is less than inspiring.
+
+```{r}
+mtcars %>%
+  summary() %>%
+  knitr::kable()
+```
+
+## Try the `gtsummary` package
+
+* Learn more about the `gtsummary` package at: [https://www.danieldsjoberg.com/gtsummary/index.html](https://www.danieldsjoberg.com/gtsummary/index.html)
+* Inspiration Gallery, [https://www.danieldsjoberg.com/gtsummary/articles/gallery.html](https://www.danieldsjoberg.com/gtsummary/articles/gallery.html).
+
+```{r}
+library(gtsummary)
+mtcars %>%
+  tbl_summary()
+```
+
+Look at statistics by group.
+
+```{r}
+mtcars %>%
+  tbl_summary(by = cyl)
+```
+
+Add statistical comparison tests.
+
+```{r}
+mtcars %>%
+  tbl_summary(by = cyl) %>% 
+  add_p()
+```
+
+## Also try the arsenal package
+
+Learn more about the `arsenal` package:
+
+* [https://mayoverse.github.io/arsenal/](https://mayoverse.github.io/arsenal/)
+* and the `tableby()` function [https://mayoverse.github.io/arsenal/articles/tableby.html](https://mayoverse.github.io/arsenal/articles/tableby.html)
+
+This time, let's look at the `penguins` dataset from the `palmerpenguins` package.
+
+We'll use the `tableby()` function from the arsenal package to get some summary stats.
+
+**NOTE: IMPORTANT - when using the arsenal package, you need to add `results = "asis"` in your r-chunk options so that the table looks correct when you "knit" your Rmarkdown file.**
+
+```{r results = "asis"}
+library(palmerpenguins)
+library(arsenal)
+
+tab1 <- tableby(~ bill_length_mm + bill_depth_mm +
+                  flipper_length_mm + body_mass_g, 
+                data = penguins)
+summary(tab1)
+```
+
+We can also get comparison statistics by group with associated statistical tests. Let's look at these summary stats by the 3 `species` of penguins.
+
+```{r results = "asis"}
+tab1 <- tableby(species ~ bill_length_mm + bill_depth_mm +
+                  flipper_length_mm + body_mass_g, 
+                data = penguins)
+summary(tab1)
+```
+
+## Another COOL package, `summarytools`
+
+Another really cool package that is useful for getting a quick summary of what is in your dataset along with some quick summary stats and tiny charts.
+
+Learn more at:
+
+* [https://cran.r-project.org/web/packages/summarytools/](https://cran.r-project.org/web/packages/summarytools/)
+* [https://cran.r-project.org/web/packages/summarytools/vignettes/introduction.html](https://cran.r-project.org/web/packages/summarytools/vignettes/introduction.html)
+
+Let's look at the `penguins` dataset again.
+
+And like the `arsenal` package, when we use the `summarytools` package, you need to add `results = "asis"` to the r-chunk options.
+
+```{r results = "asis"}
+library(summarytools)
+dfSummary(penguins, 
+          plain.ascii  = FALSE, 
+          style        = "grid", 
+          graph.magnif = 0.75, 
+          valid.col    = FALSE,
+          tmp.img.dir  = "/tmp")
+```
+
+Get a nice crosstable for 2 categorical variables using `ctable()` function. Let's look at species and sex in the penguins dataset.
+
+**NOTE: At the moment `ctable()` will only work for HTML output. This does not work for DOC or PDF formats.**
+
+```{r results = "asis"}
+library(magrittr)
+penguins %$%  # Acts like with(penguins, ...)
+  ctable(x = species, y = sex,
+         useNA = "no",
+         chisq = TRUE,
+         OR    = TRUE,
+         RR    = TRUE,
+         headings = FALSE) %>%
+  print(method = "render")
+```
+
+## More fun packages to try out
+
+These can all be fun to play with but with "great power comes great responsibility" - the key is looking for examples to adapt and reading the documentation.
+
+For all of these getting the formatting to work across multiple output formats is really challenging. Typically, the developers get HTML and/or PDF (through LaTeX) working first and MS WORD DOCX formats are the hardest to adapt. Although if all fails (sometimes) you can simply cut and paste HTML output over into a WORD document - see `kableExtra` short video [http://haozhu233.github.io/kableExtra/kableExtra_and_word.html](http://haozhu233.github.io/kableExtra/kableExtra_and_word.html).
+
+* `reactablefmtr`  [https://kcuilla.github.io/reactablefmtr/index.html](https://kcuilla.github.io/reactablefmtr/index.html)
+* `flextable` [https://ardata-fr.github.io/flextable-book/](https://ardata-fr.github.io/flextable-book/) and gallery examples at [https://ardata-fr.github.io/flextable-gallery/gallery/](https://ardata-fr.github.io/flextable-gallery/gallery/)
+* `kableExtra` for added functionality for `knitr::kable()`, see [https://cran.r-project.org/web/packages/kableExtra/](https://cran.r-project.org/web/packages/kableExtra/)
+
